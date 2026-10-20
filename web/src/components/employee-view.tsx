@@ -9,6 +9,7 @@ import { formatSalary } from "@/lib/format";
 import { EMPTY_OPTIONS, type Employee, type Options, type Page, type SortField } from "@/lib/types";
 import { EmployeeDialog } from "./employee-dialog";
 import { FilterSelect } from "./filter-select";
+import { Pencil, Trash2 } from "lucide-react";
 
 const PAGE_SIZE = 25;
 
@@ -60,10 +61,7 @@ export function EmployeesView() {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    listEmployees(
-      { page, pageSize: PAGE_SIZE, search, country, department, jobTitle, sortBy, sortDir },
-      controller.signal
-    )
+    listEmployees({ page, pageSize: PAGE_SIZE, search, country, department, jobTitle, sortBy, sortDir }, controller.signal)
       .then((result) => {
         // Deleting the last row on the last page leaves an empty page: step back.
         if (result.items.length === 0 && result.total > 0 && page > 1) {
@@ -112,19 +110,9 @@ export function EmployeesView() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Input
-          className="w-64"
-          placeholder="Search by name or email"
-          value={searchInput}
-          onChange={(event) => setSearchInput(event.target.value)}
-        />
+        <Input className="w-64" placeholder="Search by name or email" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
         <FilterSelect label="Countries" value={country} options={options.countries} onChange={changeFilter(setCountry)} />
-        <FilterSelect
-          label="Departments"
-          value={department}
-          options={options.departments}
-          onChange={changeFilter(setDepartment)}
-        />
+        <FilterSelect label="Departments" value={department} options={options.departments} onChange={changeFilter(setDepartment)} />
         <FilterSelect label="Job titles" value={jobTitle} options={options.jobTitles} onChange={changeFilter(setJobTitle)} />
         <Button className="ml-auto" onClick={() => setEditing("new")}>
           Add employee
@@ -149,7 +137,9 @@ export function EmployeesView() {
                   </button>
                 </TableHead>
               ))}
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="w-24 text-right">
+                <span className="sr-only">Actions</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -171,17 +161,31 @@ export function EmployeesView() {
                 <TableCell>{employee.jobTitle}</TableCell>
                 <TableCell>{employee.department}</TableCell>
                 <TableCell>{employee.country}</TableCell>
-                <TableCell className="text-right tabular-nums">
-                  {formatSalary(employee.salary, employee.currency)}
-                </TableCell>
+                <TableCell className="text-right tabular-nums">{formatSalary(employee.salary, employee.currency)}</TableCell>
                 <TableCell>{employee.hireDate}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" onClick={() => setEditing(employee)}>
-                    Edit
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(employee)}>
-                    Delete
-                  </Button>
+                  <div className="flex justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                      title="Edit employee"
+                      aria-label={`Edit ${employee.firstName} ${employee.lastName}`}
+                      onClick={() => setEditing(employee)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:bg-red-50 hover:text-red-600"
+                      title="Delete employee"
+                      aria-label={`Delete ${employee.firstName} ${employee.lastName}`}
+                      onClick={() => handleDelete(employee)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -198,12 +202,7 @@ export function EmployeesView() {
             <Button variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage(page - 1)}>
               Previous
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page >= data.totalPages || loading}
-              onClick={() => setPage(page + 1)}
-            >
+            <Button variant="outline" size="sm" disabled={page >= data.totalPages || loading} onClick={() => setPage(page + 1)}>
               Next
             </Button>
           </div>
