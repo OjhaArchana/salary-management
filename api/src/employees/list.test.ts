@@ -48,13 +48,21 @@ describe("listEmployees pagination", () => {
 
 describe("listEmployees filters", () => {
   it("filters by country", () => {
-    const result = listEmployees(db, { country: "India" });
+    const result = listEmployees(db, { country: ["India"] });
     expect(result.total).toBe(2);
   });
 
   it("combines filters", () => {
-    const result = listEmployees(db, { country: "India", department: "Sales" });
+    const result = listEmployees(db, { country: ["India"], department: ["Sales"] });
     expect(emails(result.items)).toEqual(["priya@acme.com"]);
+  });
+
+    it("matches any of several values for one filter", () => {
+    expect(listEmployees(db, { country: ["India", "United States"] }).total).toBe(3);
+  });
+
+  it("treats an empty list as no filter", () => {
+    expect(listEmployees(db, { country: [] }).total).toBe(3);
   });
 });
 

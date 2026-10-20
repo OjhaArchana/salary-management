@@ -30,9 +30,9 @@ export interface ListQuery {
   page?: number;
   pageSize?: number;
   search?: string;
-  country?: string;
-  department?: string;
-  jobTitle?: string;
+  country?: string[];
+  department?: string[];
+  jobTitle?: string[];
   sortBy?: SortField;
   sortDir?: "asc" | "desc";
 }

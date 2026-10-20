@@ -73,7 +73,7 @@ describe("salaryStats", () => {
     add({ country: "India", department: "Engineering", salary: 100 });
     add({ country: "India", department: "Sales", salary: 900 });
     add({ country: "Germany", currency: "EUR", department: "Sales", salary: 500 });
-    const rows = salaryStats(db, { groupBy: "department", country: "India" });
+    const rows = salaryStats(db, { groupBy: "department", country: ["India"] });
     expect(rows.map((r) => [r.group, r.headcount])).toEqual([
       ["Engineering", 1],
       ["Sales", 1],
@@ -82,6 +82,14 @@ describe("salaryStats", () => {
 
   it("returns an empty list when nothing matches", () => {
     add();
-    expect(salaryStats(db, { groupBy: "country", country: "Atlantis" })).toEqual([]);
+    expect(salaryStats(db, { groupBy: "country", country: ["Atlantis"] })).toEqual([]);
+  });
+
+    it("includes every selected value of a filter", () => {
+    add({ country: "India", department: "Engineering", salary: 100 });
+    add({ country: "Germany", currency: "EUR", department: "Sales", salary: 500 });
+    add({ country: "Japan", currency: "JPY", department: "Sales", salary: 900 });
+    const rows = salaryStats(db, { groupBy: "country", country: ["India", "Germany"] });
+    expect(rows.map((r) => r.group)).toEqual(["Germany", "India"]);
   });
 });

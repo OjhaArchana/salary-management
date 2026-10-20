@@ -1,4 +1,5 @@
 import type { Db } from "../db";
+import { buildInFilters } from "../filters";
 
 // Whitelist: only these column names are ever interpolated into SQL.
 export const GROUP_COLUMNS = {
@@ -11,9 +12,9 @@ export type GroupBy = keyof typeof GROUP_COLUMNS;
 
 export interface SalaryStatsQuery {
   groupBy: GroupBy;
-  country?: string;
-  department?: string;
-  jobTitle?: string;
+  country?: string[];
+  department?: string[];
+  jobTitle?: string[];
 }
 
 export interface SalaryStatsRow {
@@ -31,21 +32,13 @@ const round2 = (value: number) => Math.round(value * 100) / 100;
 export function salaryStats(db: Db, query: SalaryStatsQuery): SalaryStatsRow[] {
   const groupColumn = GROUP_COLUMNS[query.groupBy];
 
-  const conditions: string[] = [];
-  const params: Record<string, string> = {};
-  const filters = [
-    ["country", query.country],
-    ["department", query.department],
-    ["job_title", query.jobTitle],
-  ] as const;
-  for (const [column, value] of filters) {
-    if (value) {
-      conditions.push(`${column} = @${column}`);
-      params[column] = value;
-    }
-  }
-  const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-
+  const { conditions, params } = buildInFilters([
+     { column: "country", values: query.country },
+     { column: "department", values: query.department },
+     { column: "job_title", values: query.jobTitle },
+   ]);
+   const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+   
   // Median: rank salaries within each (group, currency), then average the middle
   // one (odd count) or two (even count) ranks. (cnt+1)/2 and (cnt+2)/2 are integer
   // divisions: for cnt=5 both are 3, for cnt=4 they are 2 and 3.

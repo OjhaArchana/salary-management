@@ -7,9 +7,9 @@ describe("validateSalaryStatsQuery", () => {
   });
 
   it("accepts each supported grouping and optional filters", () => {
-    expect(validateSalaryStatsQuery({ groupBy: "jobTitle", country: "India" })).toMatchObject({
+    expect(validateSalaryStatsQuery({ groupBy: "jobTitle", country: ["India"] })).toMatchObject({
       ok: true,
-      data: { groupBy: "jobTitle", country: "India" },
+      data: { groupBy: "jobTitle", country: ["India"] },
     });
   });
 

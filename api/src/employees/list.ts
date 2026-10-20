@@ -1,4 +1,5 @@
 import type { Db } from "../db";
+import { buildInFilters } from "../filters";
 import { COLUMN_BY_FIELD, SELECT_COLUMNS } from "./repository";
 import type { Employee, ListQuery, Page } from "./types";
 
@@ -28,17 +29,25 @@ export function listEmployees(db: Db, query: ListQuery = {}): Page<Employee> {
     );
   }
 
-  const exactFilters = [
-    ["country", query.country],
-    ["department", query.department],
-    ["job_title", query.jobTitle],
-  ] as const;
-  for (const [column, value] of exactFilters) {
-    if (value) {
-      conditions.push(`${column} = @${column}`);
-      params[column] = value;
-    }
-  }
+     const filters = buildInFilters([
+     { column: "country", values: query.country },
+     { column: "department", values: query.department },
+     { column: "job_title", values: query.jobTitle },
+   ]);
+   conditions.push(...filters.conditions);
+   Object.assign(params, filters.params);
+
+//   const exactFilters = [
+//     ["country", query.country],
+//     ["department", query.department],
+//     ["job_title", query.jobTitle],
+//   ] as const;
+//   for (const [column, value] of exactFilters) {
+//     if (typeof value === "string" && value) {
+//       conditions.push(`${column} = @${column}`);
+//       params[column] = value;
+//     }
+//   }
 
   const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 

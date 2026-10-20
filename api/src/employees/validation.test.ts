@@ -78,4 +78,15 @@ describe("validateListQuery", () => {
     expect(validateListQuery({ pageSize: "0" }).ok).toBe(false);
     expect(validateListQuery({ sortBy: "password" }).ok).toBe(false);
   });
+
+    it("turns single and repeated filter values into arrays", () => {
+    expect(validateListQuery({ country: ["India", "Germany"], department: "Sales" })).toMatchObject({
+      ok: true,
+      data: { country: ["India", "Germany"], department: ["Sales"], jobTitle: [] },
+    });
+  });
+
+  it("ignores empty filter values", () => {
+    expect(validateListQuery({ country: "" })).toMatchObject({ ok: true, data: { country: [] } });
+  });
 });

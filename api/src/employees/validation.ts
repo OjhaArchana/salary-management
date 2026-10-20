@@ -32,13 +32,19 @@ const employeeUpdateSchema = employeeInputSchema.partial();
 
 const optionalText = z.string().trim().optional();
 
+// Accepts nothing, ?country=India or ?country=India&country=Germany. Always yields string[].
+export const multiText = z.preprocess((value) => {
+  const items = value === undefined ? [] : Array.isArray(value) ? value : [value];
+  return items.filter((item) => typeof item !== "string" || item.trim() !== "");
+}, z.array(z.string().trim()).max(200));
+
 const listQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(25),
   search: optionalText,
-  country: optionalText,
-  department: optionalText,
-  jobTitle: optionalText,
+  country: multiText,
+  department: multiText,
+  jobTitle: multiText,
   sortBy: z.enum(SORT_FIELDS).default("id"),
   sortDir: z.enum(["asc", "desc"]).default("asc"),
 });

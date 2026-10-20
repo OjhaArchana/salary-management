@@ -69,6 +69,14 @@ describe("GET /api/employees", () => {
   it("returns 400 for an invalid query", async () => {
     expect((await request(app).get("/api/employees?pageSize=0")).status).toBe(400);
   });
+
+    it("accepts several values for one filter", async () => {
+    await create();
+    await create({ email: "liam@acme.com", country: "United States", currency: "USD" });
+    await create({ email: "max@acme.com", country: "Germany", currency: "EUR" });
+    const res = await request(app).get("/api/employees?country=India&country=Germany");
+    expect(res.body.total).toBe(2);
+  });
 });
 
 describe("GET /api/employees/:id", () => {
