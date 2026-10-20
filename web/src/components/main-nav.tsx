@@ -23,7 +23,7 @@ export function MainNav() {
             aria-current={active ? "page" : undefined}
             className={`-mb-px flex items-center border-b-2 px-1 text-sm transition-colors ${
               active
-                ? "border-foreground font-medium text-foreground"
+                ? "border-primary font-medium text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >

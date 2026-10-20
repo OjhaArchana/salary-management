@@ -8,11 +8,11 @@ import { formatSalary } from "@/lib/format";
 import { EMPTY_OPTIONS, type GroupBy, type Options, type SalaryStatsRow } from "@/lib/types";
 import { FilterSelect } from "./filter-select";
 
-const GROUPS: { value: GroupBy; label: string }[] = [
-  { value: "country", label: "Country" },
-  { value: "department", label: "Department" },
-  { value: "jobTitle", label: "Job title" },
-];
+   const GROUPS: { value: GroupBy; label: string; plural: string }[] = [
+     { value: "country", label: "Country", plural: "Countries" },
+     { value: "department", label: "Department", plural: "Departments" },
+     { value: "jobTitle", label: "Job title", plural: "Job titles" },
+   ];
 
 export function InsightsView() {
   const [options, setOptions] = useState<Options>(EMPTY_OPTIONS);
@@ -84,9 +84,9 @@ export function InsightsView() {
         </p>
       )}
 
-      <div className={`rounded-md border ${loading ? "opacity-60" : ""}`}>
+      <div className={`overflow-hidden rounded-lg border bg-card shadow-sm transition-opacity ${loading ? "opacity-60" : ""}`}>
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-muted/50">
             <TableRow>
               <TableHead>{groupLabel}</TableHead>
               <TableHead>Currency</TableHead>

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+ import { Inter } from "next/font/google";
 import {MainNav} from "@/components/main-nav";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ACME Salary Management",
@@ -11,8 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-background text-foreground antialiased">
-        <header className="border-b">
+        <body className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
+        <header className="border-b bg-card">
           <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
             <span className="font-semibold">ACME Salary Management</span>
             {/* <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">

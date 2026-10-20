@@ -125,9 +125,9 @@ export function EmployeesView() {
         </p>
       )}
 
-      <div className={`rounded-md border ${loading ? "opacity-60" : ""}`}>
+    <div className={`overflow-hidden rounded-lg border bg-card shadow-sm transition-opacity ${loading ? "opacity-60" : ""}`}>        
         <Table>
-          <TableHeader>
+        <TableHeader className="bg-muted/50">
             <TableRow>
               {COLUMNS.map(({ label, field }) => (
                 <TableHead key={field} className={field === "salary" ? "text-right" : ""}>
@@ -158,9 +158,9 @@ export function EmployeesView() {
                   </div>
                   <div className="text-xs text-muted-foreground">{employee.email}</div>
                 </TableCell>
-                <TableCell>{employee.jobTitle}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.country}</TableCell>
+                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.jobTitle}</span></TableCell>
+                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.department}</span></TableCell>
+                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.country}</span></TableCell>
                 <TableCell className="text-right tabular-nums">{formatSalary(employee.salary, employee.currency)}</TableCell>
                 <TableCell>{employee.hireDate}</TableCell>
                 <TableCell className="text-right">
