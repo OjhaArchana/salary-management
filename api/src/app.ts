@@ -2,7 +2,8 @@ import express, { type NextFunction, type Request, type Response } from "express
 import cors from "cors";
 import type { Db } from "./db";
 import { employeeRouter } from "./employees/routes";
-   import { insightsRouter } from "./insights/routes";
+import { insightsRouter } from "./insights/routes";
+import { listOptions } from "./employees/options";
 
 function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction): void {
   if ((err as { status?: number }).status === 400) {
@@ -23,6 +24,7 @@ export function createApp(db: Db) {
   });
   app.use("/api/employees", employeeRouter(db));
   app.use("/api/insights", insightsRouter(db));
+  app.get("/api/options", (_req, res) => {res.json(listOptions(db));});
   app.use(errorHandler);
   return app;
 }
