@@ -43,8 +43,7 @@ const listQuerySchema = z.object({
   sortDir: z.enum(["asc", "desc"]).default("asc"),
 });
 
-function validate<S extends z.ZodType>(schema: S, input: unknown): ValidationResult<z.infer<S>> {
-  const result = schema.safeParse(input);
+export function validate<S extends z.ZodType>(schema: S, input: unknown): ValidationResult<z.infer<S>> {  const result = schema.safeParse(input);
   if (result.success) return { ok: true, data: result.data };
   return {
     ok: false,
