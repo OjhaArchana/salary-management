@@ -22,3 +22,11 @@
 - All aggregation happens in the database, so the API returns a handful of rows, not 10,000.
 - Measured on the 10,000-row seed: 87.5867 ms for groupBy=jobTitle.
 - Trade-off: if the dataset grew by orders of magnitude, I would add precomputed or cached aggregates.
+
+## UI
+- Two pages: / (employee table, add/edit dialog, delete) and /insights (salary stats by country, department or job title).
+- All data operations are server-side; the browser never holds more than one page of employees.
+- Search is debounced (300 ms) and stale requests are aborted, so slow responses cannot overwrite newer ones.
+- Insights rows are per currency with an explicit on-screen note, matching the "no currency conversion" decision.
+- GET /api/options feeds the filter dropdowns and the form's suggestions.
+- Known gaps: no component or end-to-end tests (only the pure helpers are unit-tested); sorting by salary mixes currencies; no auth.
