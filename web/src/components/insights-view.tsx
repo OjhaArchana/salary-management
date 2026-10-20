@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getOptions, getSalaryStats } from "@/lib/api";
 import { formatSalary } from "@/lib/format";
 import { EMPTY_OPTIONS, type GroupBy, type Options, type SalaryStatsRow } from "@/lib/types";
-import { FilterSelect } from "./filter-select";
+import { MultiSelectFilter } from "./multiSelectFilter";
 
    const GROUPS: { value: GroupBy; label: string; plural: string }[] = [
      { value: "country", label: "Country", plural: "Countries" },
@@ -17,9 +17,9 @@ import { FilterSelect } from "./filter-select";
 export function InsightsView() {
   const [options, setOptions] = useState<Options>(EMPTY_OPTIONS);
   const [groupBy, setGroupBy] = useState<GroupBy>("country");
-  const [country, setCountry] = useState("");
-  const [department, setDepartment] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
+  const [country, setCountry] = useState<string[]>([]);
+  const [department, setDepartment] = useState<string[]>([]);
+  const [jobTitle, setJobTitle] = useState<string[]>([]);
   const [rows, setRows] = useState<SalaryStatsRow[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,15 @@ export function InsightsView() {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    getSalaryStats({ groupBy, country, department, jobTitle }, controller.signal)
+    getSalaryStats(
+      {
+        groupBy,
+        country: country.join(","),
+        department: department.join(","),
+        jobTitle: jobTitle.join(","),
+      },
+      controller.signal,
+    )
       .then((result) => {
         setRows(result.rows);
         setError(null);
@@ -73,9 +81,9 @@ export function InsightsView() {
             </Button>
           ))}
         </div>
-        <FilterSelect label="Countries" value={country} options={options.countries} onChange={setCountry} />
-        <FilterSelect label="Departments" value={department} options={options.departments} onChange={setDepartment} />
-        <FilterSelect label="Job titles" value={jobTitle} options={options.jobTitles} onChange={setJobTitle} />
+   <MultiSelectFilter label="Country" selected={country} options={options.countries} onChange={setCountry} />
+   <MultiSelectFilter label="Department" selected={department} options={options.departments} onChange={setDepartment} />
+   <MultiSelectFilter label="Job title" selected={jobTitle} options={options.jobTitles} onChange={setJobTitle} />
       </div>
 
       {error && (

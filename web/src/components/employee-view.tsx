@@ -8,7 +8,7 @@ import { deleteEmployee, getOptions, listEmployees } from "@/lib/api";
 import { formatSalary } from "@/lib/format";
 import { EMPTY_OPTIONS, type Employee, type Options, type Page, type SortField } from "@/lib/types";
 import { EmployeeDialog } from "./employee-dialog";
-import { FilterSelect } from "./filter-select";
+import { MultiSelectFilter } from "./multiSelectFilter";
 import { Pencil, Trash2 } from "lucide-react";
 
 const PAGE_SIZE = 25;
@@ -30,9 +30,9 @@ export function EmployeesView() {
   const [options, setOptions] = useState<Options>(EMPTY_OPTIONS);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [country, setCountry] = useState("");
-  const [department, setDepartment] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
+  const [country, setCountry] = useState<string[]>([]);
+  const [department, setDepartment] = useState<string[]>([]);
+  const [jobTitle, setJobTitle] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortField>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
@@ -61,7 +61,19 @@ export function EmployeesView() {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    listEmployees({ page, pageSize: PAGE_SIZE, search, country, department, jobTitle, sortBy, sortDir }, controller.signal)
+    listEmployees(
+      {
+        page,
+        pageSize: PAGE_SIZE,
+        search,
+        country: country.join(","),
+        department: department.join(","),
+        jobTitle: jobTitle.join(","),
+        sortBy,
+        sortDir,
+      },
+      controller.signal,
+    )
       .then((result) => {
         // Deleting the last row on the last page leaves an empty page: step back.
         if (result.items.length === 0 && result.total > 0 && page > 1) {
@@ -80,12 +92,12 @@ export function EmployeesView() {
     return () => controller.abort();
   }, [page, search, country, department, jobTitle, sortBy, sortDir, refreshKey]);
 
-  function changeFilter(setter: (value: string) => void) {
-    return (value: string) => {
-      setter(value);
-      setPage(1);
-    };
-  }
+     function changeFilter(setter: (value: string[]) => void) {
+     return (value: string[]) => {
+       setter(value);
+       setPage(1);
+     };
+   }
 
   function toggleSort(field: SortField) {
     if (sortBy === field) {
@@ -111,9 +123,9 @@ export function EmployeesView() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Input className="w-64" placeholder="Search by name or email" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
-        <FilterSelect label="Countries" value={country} options={options.countries} onChange={changeFilter(setCountry)} />
-        <FilterSelect label="Departments" value={department} options={options.departments} onChange={changeFilter(setDepartment)} />
-        <FilterSelect label="Job titles" value={jobTitle} options={options.jobTitles} onChange={changeFilter(setJobTitle)} />
+           <MultiSelectFilter label="Country" selected={country} options={options.countries} onChange={changeFilter(setCountry)} />
+   <MultiSelectFilter label="Department" selected={department} options={options.departments} onChange={changeFilter(setDepartment)} />
+   <MultiSelectFilter label="Job title" selected={jobTitle} options={options.jobTitles} onChange={changeFilter(setJobTitle)} />
         <Button className="ml-auto" onClick={() => setEditing("new")}>
           Add employee
         </Button>
