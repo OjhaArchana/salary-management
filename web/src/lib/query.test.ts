@@ -15,4 +15,12 @@ describe("buildQuery", () => {
   it("encodes special characters", () => {
     expect(buildQuery({ search: "a b&c" })).toBe("?search=a+b%26c");
   });
+
+  it("repeats the key for each array value", () => {
+    expect(buildQuery({ country: ["India", "Germany"], page: 1 })).toBe("?country=India&country=Germany&page=1");
+  });
+
+  it("skips empty arrays", () => {
+    expect(buildQuery({ country: [] })).toBe("");
+  });
 });
