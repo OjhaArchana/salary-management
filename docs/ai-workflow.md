@@ -13,3 +13,7 @@ Tools used: Claude (planning, code generation, review).
 - Step 4: built the employee API test-first with Claude, one behaviour per commit (validation, repository, list/search/filter/pagination, routes). Decided myself: zod at the edge, DB-enforced unique email mapped to 409, whitelisted sort fields, capped page size.
 - Step 5: built the insights API test-first with Claude. Decided myself: break every row down by currency (no cross-currency averaging, consistent with the requirements doc), compute everything in one SQL query, whitelisted group columns.
 - Step 6: built the UI with Claude (Next.js, shadcn/ui). Decided myself: server-driven table (search, filters, sort, pagination all in the API), debounced search with request cancellation, insights split by currency with no conversion, a small options endpoint for the filter dropdowns.
+
+
+## Enhancements
+- UI polish: asked Claude for active nav state, icon buttons, styling and multi-select filters, one at a time. For the filters I decided: repeated query params instead of comma lists, backward-compatible single values, one shared IN-clause helper, native checkboxes, and tests written before the change.

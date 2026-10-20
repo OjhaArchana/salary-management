@@ -30,3 +30,9 @@
 - Insights rows are per currency with an explicit on-screen note, matching the "no currency conversion" decision.
 - GET /api/options feeds the filter dropdowns and the form's suggestions.
 - Known gaps: no component or end-to-end tests (only the pure helpers are unit-tested); sorting by salary mixes currencies; no auth.
+
+## Multi-select filters
+- Filters are sent as repeated query params (?country=India&country=Germany) so values containing commas are safe. A single value still works.
+- Validation normalises none/one/many values to string[] and caps each filter at 200 values.
+- One shared helper builds `column IN (@col_0, @col_1)` with named parameters. Column names come from a literal union, never from user input.
+- UI: checkbox popover per filter, with a search box for long lists, a selected count and a Clear action. Changing a filter resets to page 1.
