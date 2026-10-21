@@ -8,7 +8,6 @@ export class DuplicateEmailError extends Error {
   }
 }
 
-// Whitelist mapping API field names to DB columns. Dynamic SQL only ever uses these values.
 export const COLUMN_BY_FIELD: Record<keyof EmployeeInput, string> = {
   firstName: "first_name",
   lastName: "last_name",
@@ -21,7 +20,6 @@ export const COLUMN_BY_FIELD: Record<keyof EmployeeInput, string> = {
   hireDate: "hire_date",
 };
 
-// Aliases return camelCase objects straight from SQL.
 export const SELECT_COLUMNS = `id, first_name AS firstName, last_name AS lastName, email,
   job_title AS jobTitle, department, country, currency, salary, hire_date AS hireDate`;
 

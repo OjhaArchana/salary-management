@@ -1,4 +1,3 @@
-// Only these literal column names are ever interpolated into SQL.
 export type FilterColumn = "country" | "department" | "job_title";
 
 export interface ColumnFilter {

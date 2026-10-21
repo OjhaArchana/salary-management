@@ -32,7 +32,6 @@ const employeeUpdateSchema = employeeInputSchema.partial();
 
 const optionalText = z.string().trim().optional();
 
-// Accepts nothing, ?country=India or ?country=India&country=Germany. Always yields string[].
 export const multiText = z.preprocess((value) => {
   const items = value === undefined ? [] : Array.isArray(value) ? value : [value];
   return items.filter((item) => typeof item !== "string" || item.trim() !== "");

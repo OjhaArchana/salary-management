@@ -6,7 +6,6 @@ export interface Options {
   jobTitles: string[];
 }
 
-// The column argument is a literal union, so nothing user-supplied reaches the SQL.
 function distinct(db: Db, column: "country" | "department" | "job_title"): string[] {
   const rows = db
     .prepare(`SELECT DISTINCT ${column} AS value FROM employees ORDER BY value`)

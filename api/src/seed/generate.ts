@@ -27,7 +27,6 @@ export function generateEmployees(count: number, seed = 42): NewEmployee[] {
     employees.push({
       firstName,
       lastName,
-      // The running number keeps emails unique even when names repeat.
       email: `${firstName}.${lastName}.${i}@acme.com`.toLowerCase(),
       jobTitle: role.title,
       department: department.name,

@@ -43,7 +43,6 @@ export function EmployeesView() {
   const [editing, setEditing] = useState<Employee | "new" | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Debounce the search box so we do not query on every keystroke.
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput.trim());
@@ -52,7 +51,6 @@ export function EmployeesView() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Reload the dropdown values after any add, edit or delete (a new country may appear).
   useEffect(() => {
     getOptions()
       .then(setOptions)
@@ -67,7 +65,6 @@ export function EmployeesView() {
       controller.signal,
     )
       .then((result) => {
-        // Deleting the last row on the last page leaves an empty page: step back.
         if (result.items.length === 0 && result.total > 0 && page > 1) {
           setPage(result.totalPages);
           return;

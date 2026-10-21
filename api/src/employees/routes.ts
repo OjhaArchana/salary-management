@@ -15,7 +15,6 @@ function parseId(raw: string): number | null {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-// Known write errors become 409; anything else goes to the central error handler.
 function handleWriteError(err: unknown, res: Response): void {
   if (err instanceof DuplicateEmailError) {
     res.status(409).json({ error: err.message });

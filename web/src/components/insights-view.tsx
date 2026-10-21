@@ -15,7 +15,6 @@ const GROUPS: { value: GroupBy; label: string; plural: string }[] = [
   { value: "jobTitle", label: "Job title", plural: "Job titles" },
 ];
 
-// Where the average sits between min and max, as a percentage (50 when min equals max).
 function averagePosition(row: SalaryStatsRow): number {
   if (row.max <= row.min) return 50;
   const position = ((row.average - row.min) / (row.max - row.min)) * 100;

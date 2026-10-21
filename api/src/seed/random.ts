@@ -1,4 +1,4 @@
-// Small deterministic PRNG (mulberry32): same seed, same sequence.
+
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {

@@ -23,7 +23,6 @@ export function departmentBadge(department: string): string {
   return BADGES[department] ?? FALLBACK_BADGE;
 }
 
-// A simple string hash, so the same person always gets the same colour.
 export function avatarColor(seed: string): string {
   let hash = 0;
   for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;

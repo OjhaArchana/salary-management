@@ -19,7 +19,7 @@ export function insertEmployees(db: Db, employees: NewEmployee[]): void {
     VALUES
       (@firstName, @lastName, @email, @jobTitle, @department, @country, @currency, @salary, @hireDate)
   `);
-  // One transaction: much faster, and all-or-nothing.
+
   db.transaction((rows: NewEmployee[]) => {
     for (const row of rows) insert.run(row);
   })(employees);

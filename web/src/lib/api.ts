@@ -26,7 +26,6 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
-  // console.log("API REQUEST:", path);
   let res: Response;
   try {
     res = await fetch(`${BASE_URL}${path}`, {

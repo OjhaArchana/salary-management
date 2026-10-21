@@ -6,7 +6,6 @@ import type { Employee, ListQuery, Page } from "./types";
 const DEFAULT_PAGE_SIZE = 25;
 const MAX_PAGE_SIZE = 100;
 
-// Escape LIKE wildcards so user input is matched literally.
 function escapeLike(value: string): string {
   return value.replace(/[\\%_]/g, "\\$&");
 }
@@ -37,18 +36,6 @@ export function listEmployees(db: Db, query: ListQuery = {}): Page<Employee> {
    conditions.push(...filters.conditions);
    Object.assign(params, filters.params);
 
-//   const exactFilters = [
-//     ["country", query.country],
-//     ["department", query.department],
-//     ["job_title", query.jobTitle],
-//   ] as const;
-//   for (const [column, value] of exactFilters) {
-//     if (typeof value === "string" && value) {
-//       conditions.push(`${column} = @${column}`);
-//       params[column] = value;
-//     }
-//   }
-
   const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
   const total = (
@@ -59,7 +46,6 @@ export function listEmployees(db: Db, query: ListQuery = {}): Page<Employee> {
   const sortColumn = sortBy === "id" ? "id" : COLUMN_BY_FIELD[sortBy];
   const direction = query.sortDir === "desc" ? "DESC" : "ASC";
 
-  // The id tie-break keeps page order stable when sort values repeat.
   const items = db
     .prepare(
       `SELECT ${SELECT_COLUMNS} FROM employees ${where}

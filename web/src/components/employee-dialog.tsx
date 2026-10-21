@@ -54,7 +54,7 @@ function initialValues(employee: Employee | null): Record<FieldName, string> {
 }
 
 interface EmployeeDialogProps {
-  employee: Employee | null; // null means "add a new employee"
+  employee: Employee | null; 
   options: Options;
   onClose: () => void;
   onSaved: () => void;

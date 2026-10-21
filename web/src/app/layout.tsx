@@ -23,18 +23,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}
       >
         {" "}
-        {/* <header className="border-b bg-card">
-          <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
-            <span className="font-semibold">ACME Salary Management</span> */}
-            {/* <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
-              Employees
-            </Link>
-            <Link href="/insights" className="text-sm text-muted-foreground hover:text-foreground">
-              Insights
-            </Link> */}
-            {/* <MainNav /> */}
-          {/* </nav> */}
-        {/* </header> */}
 
            <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur">
      <div className="mx-auto flex max-w-6xl items-stretch gap-8 px-4">

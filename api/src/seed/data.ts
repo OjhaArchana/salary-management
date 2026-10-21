@@ -1,13 +1,12 @@
 export interface Country {
   name: string;
   currency: string;
-  // Rough local-pay multiplier vs a USD baseline. Only for realistic-looking seed data.
   factor: number;
 }
 
 export interface Role {
   title: string;
-  min: number; // baseline USD range
+  min: number; 
   max: number;
 }
 

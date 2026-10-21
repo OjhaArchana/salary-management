@@ -1,7 +1,6 @@
 import type { Db } from "../db";
 import { buildInFilters } from "../filters";
 
-// Whitelist: only these column names are ever interpolated into SQL.
 export const GROUP_COLUMNS = {
   country: "country",
   department: "department",
@@ -39,9 +38,7 @@ export function salaryStats(db: Db, query: SalaryStatsQuery): SalaryStatsRow[] {
    ]);
    const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
    
-  // Median: rank salaries within each (group, currency), then average the middle
-  // one (odd count) or two (even count) ranks. (cnt+1)/2 and (cnt+2)/2 are integer
-  // divisions: for cnt=5 both are 3, for cnt=4 they are 2 and 3.
+ 
   const rows = db
     .prepare(
       `WITH ranked AS (
