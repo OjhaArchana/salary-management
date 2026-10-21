@@ -5,3 +5,6 @@ dist/
 .env*.local
 *.db
 *.sqlite
+*.db-wal
+*.db-shm
+*.db-journal
