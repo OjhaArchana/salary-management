@@ -13,8 +13,8 @@ ACME's HR team manages salary data for 10,000 employees across multiple countrie
 **In scope**
 
 1. **Employee records (CRUD):** create, view, edit and delete employees with: name, email, job title, department, country, salary, currency, hire date.
-2. **Find employees fast:** search by name or email, filter by country, department and job title, sort, and server-side pagination, since 10,000 rows cannot be loaded at once.
-3. **Salary insights:** minimum, maximum, average, median and headcount, grouped by country, department and job title. This directly answers "how does the org pay people?".
+2. **Find employees fast:** search by name or email, filter by one or more countries, departments and job titles, sort, and server-side pagination, since 10,000 rows cannot be loaded at once.
+3. **Salary insights:** minimum, maximum, average, median and headcount, grouped by country, department and job title, with the same multi-select filters. This directly answers "how does the org pay people?".
 4. **Realistic seed data:** a script that generates 10,000 employees across multiple countries, with plausible salary ranges and currencies per country.
 5. **Quality bar:** unit tests for core logic (validation, filtering, insight calculations), a deployed instance and a short demo video.
 
@@ -22,14 +22,14 @@ ACME's HR team manages salary data for 10,000 employees across multiple countrie
 
 | Left out | Reasoning |
 |---|---|
-| **Currency conversion** | Exchange rates change daily and the right rate is a business decision. Each salary is stored in its local currency and insights are shown per country, so no figure is ever misleading. Cross-country comparison is a natural follow-up. |
+| **Currency conversion** | Exchange rates change daily and the right rate is a business decision. Each salary is stored in its local currency and insights are split by currency, so no figure ever mixes currencies. Cross-currency comparison is a natural follow-up. |
 | **Salary history / audit trail** | The core need is current pay. History adds a data model and UI that is a separate feature. Noted as the first extension. |
 | **Authentication and roles** | There is exactly one persona. Auth would add effort without helping to judge the core problem. A production rollout would add SSO first. |
 | **Bulk import/export of Excel** | Valuable for migration, but the seed script covers data for this exercise. Listed as a future feature. |
 | **Payroll, bonuses, equity, taxes** | Different problem domain. This system tracks base salary only. |
 | **Org chart / manager hierarchy** | Not needed to answer pay questions. |
 
-## 4. Assumptions (to be confirmed with Incubyte)
+## 4. Assumptions (working defaults, open to clarification)
 
 - Salary is a single annual base amount per employee, in that employee's local currency.
 - Only current salary is tracked, with no history.
@@ -39,7 +39,7 @@ ACME's HR team manages salary data for 10,000 employees across multiple countrie
 ## 5. Technical Approach (brief)
 
 - **Backend:** Node.js with TypeScript and a REST API, with SQLite as the relational database (zero setup, fast enough for 10,000 rows, easy to swap later).
-- **Frontend:** React/Next.js with a component library.
+- **Frontend:** React with Next.js and shadcn/ui.
 - **Performance:** indexes on country, department and job title; pagination and aggregations done in the database, not in the browser.
 - **Testing:** fast, deterministic unit tests using an in-memory database, written test-first where practical.
-- **Process:** small, incremental commits; design notes, trade-offs and AI prompts committed under `/docs`.
+- **Process:** small, incremental commits; design notes, trade-offs and the AI workflow log committed under `/docs`.
