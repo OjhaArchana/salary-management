@@ -17,3 +17,6 @@ Tools used: Claude (planning, code generation, review).
 
 ## Enhancements
 - UI polish: asked Claude for active nav state, icon buttons, styling and multi-select filters, one at a time. For the filters I decided: repeated query params instead of comma lists, backward-compatible single values, one shared IN-clause helper, native checkboxes, and tests written before the change.
+
+## Debugging
+- Debugging: multi-select returned no rows. The API tests passed and a direct API call worked, so I logged the query builder's input in the browser and found the views were joining filter arrays with commas before calling it. Fixed the types and removed the join.
