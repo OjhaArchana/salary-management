@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Pencil, Plus, Search, Trash2, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { deleteEmployee, getOptions, listEmployees } from "@/lib/api";
+import { avatarColor, departmentBadge, initials } from "@/lib/avatar";
 import { formatSalary } from "@/lib/format";
 import { EMPTY_OPTIONS, type Employee, type Options, type Page, type SortField } from "@/lib/types";
 import { EmployeeDialog } from "./employee-dialog";
 import { MultiSelectFilter } from "./multiSelectFilter";
-import { Pencil, Trash2 } from "lucide-react";
 
 const PAGE_SIZE = 25;
 
@@ -62,16 +63,7 @@ export function EmployeesView() {
     const controller = new AbortController();
     setLoading(true);
     listEmployees(
-      {
-        page,
-        pageSize: PAGE_SIZE,
-        search,
-        country: country,
-        department: department,
-        jobTitle: jobTitle,
-        sortBy,
-        sortDir,
-      },
+      { page, pageSize: PAGE_SIZE, search, country, department, jobTitle, sortBy, sortDir },
       controller.signal,
     )
       .then((result) => {
@@ -92,12 +84,12 @@ export function EmployeesView() {
     return () => controller.abort();
   }, [page, search, country, department, jobTitle, sortBy, sortDir, refreshKey]);
 
-     function changeFilter(setter: (value: string[]) => void) {
-     return (value: string[]) => {
-       setter(value);
-       setPage(1);
-     };
-   }
+  function changeFilter(setter: (value: string[]) => void) {
+    return (value: string[]) => {
+      setter(value);
+      setPage(1);
+    };
+  }
 
   function toggleSort(field: SortField) {
     if (sortBy === field) {
@@ -120,15 +112,48 @@ export function EmployeesView() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <Input className="w-64" placeholder="Search by name or email" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
-           <MultiSelectFilter label="Country" selected={country} options={options.countries} onChange={changeFilter(setCountry)} />
-   <MultiSelectFilter label="Department" selected={department} options={options.departments} onChange={changeFilter(setDepartment)} />
-   <MultiSelectFilter label="Job title" selected={jobTitle} options={options.jobTitles} onChange={changeFilter(setJobTitle)} />
-        <Button className="ml-auto" onClick={() => setEditing("new")}>
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Employees</h1>
+          <p className="text-sm text-muted-foreground">
+            Search, filter and manage salary records across every country.
+          </p>
+        </div>
+        <Button className="shadow-sm" onClick={() => setEditing("new")}>
+          <Plus className="mr-1 h-4 w-4" />
           Add employee
         </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3 shadow-sm">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            className="w-64 pl-9"
+            placeholder="Search by name or email"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+          />
+        </div>
+        <MultiSelectFilter
+          label="Country"
+          selected={country}
+          options={options.countries}
+          onChange={changeFilter(setCountry)}
+        />
+        <MultiSelectFilter
+          label="Department"
+          selected={department}
+          options={options.departments}
+          onChange={changeFilter(setDepartment)}
+        />
+        <MultiSelectFilter
+          label="Job title"
+          selected={jobTitle}
+          options={options.jobTitles}
+          onChange={changeFilter(setJobTitle)}
+        />
       </div>
 
       {error && (
@@ -137,9 +162,13 @@ export function EmployeesView() {
         </p>
       )}
 
-    <div className={`overflow-hidden rounded-lg border bg-card shadow-sm transition-opacity ${loading ? "opacity-60" : ""}`}>        
+      <div
+        className={`overflow-hidden rounded-xl border bg-card shadow-sm transition-opacity ${
+          loading ? "opacity-60" : ""
+        }`}
+      >
         <Table>
-        <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-muted/50">
             <TableRow>
               {COLUMNS.map(({ label, field }) => (
                 <TableHead key={field} className={field === "salary" ? "text-right" : ""}>
@@ -157,24 +186,49 @@ export function EmployeesView() {
           <TableBody>
             {data && data.items.length === 0 && (
               <TableRow>
-                <TableCell colSpan={COLUMNS.length + 1} className="py-8 text-center text-muted-foreground">
-                  No employees match your filters.
+                <TableCell colSpan={COLUMNS.length + 1} className="py-14 text-center">
+                  <UsersRound className="mx-auto mb-2 h-8 w-8 text-muted-foreground/60" />
+                  <p className="font-medium">No employees found</p>
+                  <p className="text-sm text-muted-foreground">
+                    Try removing a filter or searching for something else.
+                  </p>
                 </TableCell>
               </TableRow>
             )}
             {data?.items.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>
-                  <div className="font-medium">
-                    {employee.firstName} {employee.lastName}
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${avatarColor(
+                        `${employee.firstName}${employee.lastName}`,
+                      )}`}
+                    >
+                      {initials(employee.firstName, employee.lastName)}
+                    </span>
+                    <div>
+                      <div className="font-medium">
+                        {employee.firstName} {employee.lastName}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{employee.email}</div>
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground">{employee.email}</div>
                 </TableCell>
-                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.jobTitle}</span></TableCell>
-                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.department}</span></TableCell>
-                <TableCell> <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{employee.country}</span></TableCell>
-                <TableCell className="text-right tabular-nums">{formatSalary(employee.salary, employee.currency)}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
+                <TableCell>{employee.jobTitle}</TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${departmentBadge(
+                      employee.department,
+                    )}`}
+                  >
+                    {employee.department}
+                  </span>
+                </TableCell>
+                <TableCell>{employee.country}</TableCell>
+                <TableCell className="text-right font-medium tabular-nums">
+                  {formatSalary(employee.salary, employee.currency)}
+                </TableCell>
+                <TableCell className="text-muted-foreground">{employee.hireDate}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     <Button
@@ -214,7 +268,12 @@ export function EmployeesView() {
             <Button variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage(page - 1)}>
               Previous
             </Button>
-            <Button variant="outline" size="sm" disabled={page >= data.totalPages || loading} onClick={() => setPage(page + 1)}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page >= data.totalPages || loading}
+              onClick={() => setPage(page + 1)}
+            >
               Next
             </Button>
           </div>
