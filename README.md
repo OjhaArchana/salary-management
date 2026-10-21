@@ -81,4 +81,5 @@ More detail is in [`docs/requirements.md`](docs/requirements.md), [`docs/design-
 
 - Free hosting: the deployed database resets on restart and reloads the seeded data. For production I would use hosted Postgres or a persistent disk.
 - No authentication, salary history or Excel import/export. These were left out on purpose and are explained in the requirements document.
-- Sorting by salary mixes currencies, which
+- Sorting by salary mixes currencies, which follows from not converting them.
+- The web app has no component or end-to-end tests, only tests for its helper functions.
