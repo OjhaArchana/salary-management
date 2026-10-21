@@ -28,9 +28,9 @@ export interface EmployeeListQuery {
   page?: number;
   pageSize?: number;
   search?: string;
-  country?: string;
-  department?: string;
-  jobTitle?: string;
+  country?: string[];
+  department?: string[];
+  jobTitle?: string[];
   sortBy?: SortField;
   sortDir?: "asc" | "desc";
 }
@@ -47,9 +47,9 @@ export type GroupBy = "country" | "department" | "jobTitle";
 
 export interface SalaryStatsQuery {
   groupBy: GroupBy;
-  country?: string;
-  department?: string;
-  jobTitle?: string;
+  country?: string[];
+  department?: string[];
+  jobTitle?: string[];
 }
 
 export interface SalaryStatsRow {

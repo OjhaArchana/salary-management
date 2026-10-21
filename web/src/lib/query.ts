@@ -1,6 +1,7 @@
 export function buildQuery(params: object): string {
+  // console.log("buildQuery input:", JSON.stringify(params));
   const search = new URLSearchParams();
-   for (const [key, value] of Object.entries(params)) {
+  for (const [key, value] of Object.entries(params)) {
     const values = Array.isArray(value) ? value : [value];
     for (const item of values) {
       if (item === undefined || item === null) continue;

@@ -36,9 +36,9 @@ export function InsightsView() {
     getSalaryStats(
       {
         groupBy,
-        country: country.join(","),
-        department: department.join(","),
-        jobTitle: jobTitle.join(","),
+        country: country,
+        department: department,
+        jobTitle: jobTitle,
       },
       controller.signal,
     )
